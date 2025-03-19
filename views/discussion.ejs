@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Discussion</title>
+  <link rel="stylesheet" href="/stylesheets/output.css">
+  <script src="/socket.io/socket.io.js"></script>
+</head>
+<a class="text-blue-500" href="/profile">Get Back to Profile</a>
+<body class="bg-zinc-900 text-white p-6 min-h-screen">
+
+  <h2 class="text-2xl font-semibold">Project Discussion Room</h2>
+
+  <div class="chat-box bg-zinc-800 p-4 mt-4 rounded-md h-96 overflow-auto">
+    <div id="messages" class="space-y-2"></div>
+  </div>
+
+  <input id="messageInput" type="text" placeholder="Type a message..." 
+         class="w-full p-2 border rounded mt-2 text-black">
+  <button onclick="sendMessage()" 
+          class="bg-blue-500 text-white px-4 py-2 rounded mt-2">Send</button>
+
+  <script>
+    const socket = io();
+    const user = "<%= user.name %>";
+    const room = "project-discussion";
+
+    socket.emit("joinRoom", room);
+
+    socket.on("receiveMessage", ({ user, message }) => {
+      const messageDiv = document.createElement("div");
+      messageDiv.innerHTML = `<strong>${user}:</strong> ${message}`;
+      document.getElementById("messages").appendChild(messageDiv);
+    });
+
+    function sendMessage() {
+      const message = document.getElementById("messageInput").value;
+      if (message.trim()) {
+        socket.emit("sendMessage", { room, user, message });
+        document.getElementById("messageInput").value = "";
+      }
+    }
+  </script>
+
+</body>
+</html>

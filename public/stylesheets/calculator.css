@@ -1,0 +1,53 @@
+@import url("https://fonts.googleapis.com/css2?family=Liter&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  font-family: "Liter", serif;
+}
+
+h1 {
+  cursor: context-menu;
+}
+
+.container {
+  border: 2px solid black;
+  margin: auto;
+  width: 310px;
+  border-radius: 17px;
+  background: black;
+  padding: 10px;
+  margin-top: 12px;
+}
+
+button {
+  padding: 20px;
+  border: 2px solid black;
+  border-radius: 8px;
+  font-size: 15px;
+  width: 66px;
+  cursor: pointer;
+}
+
+button:hover{
+  background-color: rgb(200, 200, 200);
+  transform: scale(1.1);
+}
+
+button.clicked {
+  transform: scale(0.95);
+  transition: transform 0.1s;
+}
+
+
+.row {
+  margin: 5px 0;
+}
+
+input {
+  width: 270px;
+  padding: 5px 10px;
+  border: 2px solid black;
+  border-radius: 10px;
+  background-color: #f0f0f0;
+}
