@@ -24,20 +24,20 @@
         <% } %>
 
           <div class="flex gap-3 items-center"><a href="/discussion"
-              class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded-md text-sm">
+              class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded-md text-sm cursor-pointer">
               🔥 Join Project Discussion
             </a>
 
-            <a href="/calculator"><button class="bg-stone-500 text-white px-4 py-2 rounded-md hover:bg-stone-600 text-sm">
+            <a href="/calculator"><button class="bg-stone-500 text-white px-4 py-2 rounded-md hover:bg-stone-600 text-sm cursor-pointer">
                 Use Calculator
               </button></a>
             <a href="/notes">
-              <button class="bg-blue-500 text-white text-sm px-4 py-2 rounded-md hover:bg-blue-600">
+              <button class="bg-blue-500 text-white text-sm px-4 py-2 rounded-md hover:bg-blue-600 cursor-pointer">
                 📄 View All Notes
               </button>
             </a>
             <div class="flex justify-end relative ml-auto">
-              <a class="" href="/logout"><button class="bg-red-500 hover:bg-red-600 px-3 py-1 rounded-md text-sm">
+              <a class="" href="/logout"><button class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-md text-sm font-semibold cursor-pointer">
                   Logout
                 </button>
 
@@ -53,33 +53,33 @@
             </a><span class="font-light">Hello</span>, <%= user.name %>
           </h3>
 
-          <div class="bg-blue-500 py-6 px-4 rounded mt-4 ">
+          <div class="bg-gray-600 py-6 px-4 rounded mt-4 ">
             <h3 class="text-lg font-semibold">AI Assistance</h3>
 
             <input id="aiPrompt" type="text" placeholder="Ask AI for help..." class="w-full p-2 border rounded mt-2 outline-none">
             <button onclick="getAIResponse()"
-              class="bg-blue-700 border-1 hover:text-zinc-300 border-1.5 border-blue-700 hover:border-zinc-300 px-2.5 py-1 rounded-lg mt-2 hover:bg-transparent text-[14px]">Ask
+              class="bg-blue-600  hover:text-zinc-500 hover:border-zinc-300 px-2.5 py-1 rounded-lg mt-2 hover:bg-blue-700 text-[14px] cursor-pointer">Ask
               AI</button>
             <p id="aiResponse" class="mt-1.5 text-zinc-100"></p>
 
            
           </div>
 
-          <h5 class="mt-5   mb-1.5 text-zinc-400 text-lg">You can create a new post below</h5>
+          <h5 class="mt-5   mb-1.5 text-zinc-400 text-lg text-center ">You can create a new post below</h5>
 
       
-          <form action="/post" method="post">
+          <form class="mt-5" action="/post" method="post">
             <textarea name="postContent" placeholder="What's on your mind?"
-              class="block w-full max-w-md p-3 h-36 outline-none resize-none bg-transparent border-2 border-zinc-600 rounded-md"
+              class="block w-full  p-3 h-36 outline-none resize-none bg-transparent border-2 border-zinc-600 rounded-md"
               required></textarea>
             <input type="submit" value="Create New Post"
-              class="px-2.5 py-1.5 bg-blue-500 hover:bg-blue-600 text-white text-md rounded-md mt-2 cursor-pointer" />
+              class="px-2.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-md rounded-md mt-2 cursor-pointer relative r-0" />
           </form>
 
           
           <div class="posts mt-10">
             <h3 class="text-zinc-400 text-lg mb-2">Your Posts</h3>
-            <div class="postcontainer">
+            <div class="postcontainer flex gap-6 flex-wrap">
               <% if (user.posts && user.posts.length> 0) { %>
                 <% user.posts.forEach(function(post) { %>
                   <div class="post mb-2 max-w-lg p-4 rounded-md border border-zinc-700 bg-zinc-800">
@@ -93,7 +93,7 @@
                     <div class="btns flex mt-5 gap-4">
                       <%= post.likes ? post.likes.length : 0 %> Likes
                         <% if (post.likes.includes(user._id)) { %>
-                          <a class="text-red-400 hover:text-red-300" href="/like/<%= post._id %>">
+                          <a class="text-red-400 hover:text-red-300 " href="/like/<%= post._id %>">
                             👎 Dislike
                           </a>
                           <% } else { %>
@@ -104,10 +104,7 @@
                               <a class="text-zinc-500 hover:text-zinc-300" href="/edit/<%= post._id %>">
                                 ✏️ Edit
                               </a>
-                              <form action="/comment/<%= post._id %>" method="POST">
-                                <textarea name="text" required></textarea>
-                                <button type="submit">Add Comment</button>
-                              </form>
+                              
 
                     </div>
                   </div>

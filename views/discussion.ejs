@@ -7,10 +7,10 @@
   <link rel="stylesheet" href="/stylesheets/output.css">
   <script src="/socket.io/socket.io.js"></script>
 </head>
-<a class="text-blue-500" href="/profile">Get Back to Profile</a>
-<body class="bg-zinc-900 text-white p-6 min-h-screen">
+<body class="bg-zinc-900 text-white p-6 min-h-screen overflow-hidden" >
+  <a class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded-md text-sm font-semibold cursor-pointer " href="/profile">Get Back to Profile</a>
 
-  <h2 class="text-3xl font-semibold">Project Discussion Room</h2>
+  <h2 class="text-3xl font-semibold mt-5">Project Discussion Room</h2>
 
   <div class="chat-box bg-zinc-800 p-4 mt-4 rounded-md h-[34rem] overflow-auto">
     <div id="messages" class="space-y-2"></div>
