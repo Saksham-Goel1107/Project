@@ -55,16 +55,19 @@
 
           <div class="bg-blue-500 py-6 px-4 rounded mt-4 ">
             <h3 class="text-lg font-semibold">AI Assistance</h3>
+
             <input id="aiPrompt" type="text" placeholder="Ask AI for help..." class="w-full p-2 border rounded mt-2 outline-none">
             <button onclick="getAIResponse()"
               class="bg-blue-700 border-1 hover:text-zinc-300 border-1.5 border-blue-700 hover:border-zinc-300 px-2.5 py-1 rounded-lg mt-2 hover:bg-transparent text-[14px]">Ask
               AI</button>
             <p id="aiResponse" class="mt-1.5 text-zinc-100"></p>
+
+           
           </div>
 
           <h5 class="mt-5   mb-1.5 text-zinc-400 text-lg">You can create a new post below</h5>
 
-          <!-- Post Creation -->
+      
           <form action="/post" method="post">
             <textarea name="postContent" placeholder="What's on your mind?"
               class="block w-full max-w-md p-3 h-36 outline-none resize-none bg-transparent border-2 border-zinc-600 rounded-md"
@@ -73,7 +76,7 @@
               class="px-2.5 py-1.5 bg-blue-500 hover:bg-blue-600 text-white text-md rounded-md mt-2 cursor-pointer" />
           </form>
 
-          <!-- User Posts Section -->
+          
           <div class="posts mt-10">
             <h3 class="text-zinc-400 text-lg mb-2">Your Posts</h3>
             <div class="postcontainer">
@@ -86,7 +89,7 @@
                       <%= post.content %>
                     </p>
 
-                    <!-- Like, dislike & Edit Buttons -->
+             
                     <div class="btns flex mt-5 gap-4">
                       <%= post.likes ? post.likes.length : 0 %> Likes
                         <% if (post.likes.includes(user._id)) { %>
@@ -101,6 +104,11 @@
                               <a class="text-zinc-500 hover:text-zinc-300" href="/edit/<%= post._id %>">
                                 ✏️ Edit
                               </a>
+                              <form action="/comment/<%= post._id %>" method="POST">
+                                <textarea name="text" required></textarea>
+                                <button type="submit">Add Comment</button>
+                              </form>
+
                     </div>
                   </div>
                   <% }); %>

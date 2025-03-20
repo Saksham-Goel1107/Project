@@ -28,6 +28,7 @@
             ❤️ Like
           </a>
         <% } %>
+        <a href="/comment/<%= post._id %>">Comment</a>
   
         <% if (post.user._id.toString() === user.userid) { %>
           <a href="/edit/<%= post._id %>" class="text-yellow-400 hover:text-yellow-300 transition">
