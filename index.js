@@ -82,41 +82,39 @@ app.post("/post", isLoggedIn, upload.single("image"), async (req, res) => {
   try {
     const { postContent } = req.body;
 
-    // Validate the content
+
     if (!postContent.trim()) {
       req.flash("error", "Post content cannot be empty.");
       return res.redirect("/profile");
     }
 
-    // Ensure user exists
     const user = await User.findOne({ email: req.user.email });
     if (!user) {
       req.flash("error", "User not found.");
       return res.redirect("/profile");
     }
 
-    // Handle image upload (optional)
     let imagePath = null;
     if (req.file) {
-      imagePath = `/uploads/${req.file.filename}`; // Store image path
+      imagePath = `/uploads/${req.file.filename}`; 
     }
 
-    // Create the new post
+    
     const newPost = await Post.create({
       title: `@${user.name}`,
       content: postContent,
       user: user._id,
-      image: imagePath, // Save image path if available
+      image: imagePath,
     });
 
-    // Link the post to the user
+   
     user.posts.push(newPost._id);
     await user.save();
 
     req.flash("success", "Post shared successfully!");
     res.redirect("/profile");
   } catch (err) {
-    console.error("❌ Error creating post:", err);
+    console.error("Error creating post:", err);
     req.flash("error", "Something went wrong.");
     res.redirect("/profile");
   }
@@ -124,10 +122,10 @@ app.post("/post", isLoggedIn, upload.single("image"), async (req, res) => {
 
 app.get("/notes", isLoggedIn, async (req, res) => {
   try {
-    const allPosts = await Post.find().populate("user", "name"); // Fetch all posts with user details
+    const allPosts = await Post.find().populate("user", "name"); 
     res.render("notes", { posts: allPosts, user: req.user });
   } catch (err) {
-    console.error("❌ Error fetching posts:", err);
+    console.error(" Error fetching posts:", err);
     req.flash("error", "Something went wrong.");
     res.redirect("/profile");
   }
@@ -142,7 +140,7 @@ app.get("/like/:id", isLoggedIn, async (req, res) => {
       return res.redirect("/notes");
     }
 
-    // Toggle like (add/remove user ID)
+   
     const index = post.likes.indexOf(req.user.userid);
     if (index === -1) {
       post.likes.push(req.user.userid);
@@ -154,14 +152,14 @@ app.get("/like/:id", isLoggedIn, async (req, res) => {
 
     await post.save();
   } catch (err) {
-    console.error("❌ Error liking post:", err);
+    console.error(" Error liking post:", err);
     req.flash("error", "Something went wrong.");
   }
   const previousPage = req.headers.referer
   if (previousPage.includes("/notes")) {
-    return res.redirect("/notes"); // Redirect to notes if the user was there
+    return res.redirect("/notes"); 
   } else {
-    return res.redirect("/profile"); // Otherwise, go to profile
+    return res.redirect("/profile"); 
   }
 
 });
@@ -172,7 +170,7 @@ app.get("/edit/:id", isLoggedIn, async (req, res) => {
     const post = await Post.findById(req.params.id);
 
 
-    // Restrict edit access to only the post creator
+    
     if (post.user.toString() !== req.user.userid) {
       req.flash("error", "You can only edit your own posts.");
       return res.redirect("/notes");
@@ -180,7 +178,7 @@ app.get("/edit/:id", isLoggedIn, async (req, res) => {
 
     res.render("edit", { post });
   } catch (err) {
-    console.error("❌ Error fetching post for edit:", err);
+    console.error(" Error fetching post for edit:", err);
     req.flash("error", "Something went wrong.");
     res.redirect("/notes");
   }
@@ -194,7 +192,7 @@ app.post("/update/:id", isLoggedIn, async (req, res) => {
 
 
 
-    // Only allow the owner to edit
+    
     if (post.user.toString() !== req.user.userid) {
       req.flash("error", "Unauthorized action.");
       return res.redirect("/notes");
@@ -205,15 +203,15 @@ app.post("/update/:id", isLoggedIn, async (req, res) => {
 
     req.flash("success", "Post updated successfully!");
   } catch (err) {
-    console.error("❌ Error updating post:", err);
+    console.error(" Error updating post:", err);
     req.flash("error", "Something went wrong.");
   }
 
   const previousPage = req.headers.referer
   if (previousPage.includes("/notes")) {
-    return res.redirect("/notes"); // Redirect to notes if the user was there
+    return res.redirect("/notes");
   } else {
-    return res.redirect("/profile"); // Otherwise, go to profile
+    return res.redirect("/profile"); 
   }
 });
 
@@ -332,8 +330,63 @@ app.get("/discussion", isLoggedIn, (req, res) => {
   res.render("discussion", { user: req.user });
 });
 
+app.get("/comment/:id", isLoggedIn, async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id)
+      .populate("user", "name")
+      .populate("comments.user", "name");
+
+    if (!post) {
+      req.flash("error", "Post not found.");
+      return res.redirect("/notes");
+    }
+
+    res.render("comment", { post, user: req.user });
+  } catch (err) {
+    console.error("Error fetching post:", err);
+    req.flash("error", "Something went wrong.");
+    res.redirect("/notes");
+  }
+});
 
 
+app.post("/comment/:id", isLoggedIn, async (req, res) => {
+  try {
+    const { text } = req.body; 
+    if (!text.trim()) {
+      req.flash("error", "Comment cannot be empty.");
+      return res.redirect("/comment/" + req.params.id);
+    }
+
+   
+    const post = await Post.findById(req.params.id);
+
+    
+    if (!post) {
+      req.flash("error", "Post not found.");
+      return res.redirect("/notes");
+    }
+
+ 
+    post.comments.push({
+      user: req.user._id,
+      text: text,
+    });
+
+    
+    await post.save();
+
+    req.flash("success", "Comment added!");
+    res.redirect("/comment/" + req.params.id); 
+  } catch (err) {
+    console.error(" Error adding comment:", err);
+    req.flash("error", "Something went wrong.");
+    res.redirect("/notes");
+  }
+});
+
+
+  
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log(` Server running on http://localhost:${PORT}`);
